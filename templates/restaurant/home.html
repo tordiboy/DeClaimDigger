@@ -1,0 +1,98 @@
+{% extends 'restaurant/base.html' %}
+
+{% block hero %}
+<div class="hero">
+    <h1>Delicious Meals Delivered To You 🍔</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-4 fw-bold text-center text-md-start">Popular Meals</h3>
+
+<!-- RESPONSIVE GRID -->
+<div class="row g-4">
+
+    {% for meal in meals %}
+    <div class="col-12 col-sm-6 col-md-4">
+
+        <div class="card shadow-sm h-100 meal-card">
+
+            <div class="meal-img-wrapper">
+                <img src="{{ meal.image.url }}" class="meal-img">
+            </div>
+
+            <div class="card-body d-flex flex-column">
+
+                <h5 class="fw-bold">{{ meal.name }}</h5>
+
+                <p class="text-muted small">
+                    {{ meal.description|truncatewords:12 }}
+                </p>
+
+                <div class="mt-auto d-flex justify-content-between align-items-center">
+
+                    <span class="fw-bold text-success fs-5">
+                        ${{ meal.price }}
+                    </span>
+
+                    <form action="{% url 'add_to_cart' meal.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-success px-3">
+                            Add
+                        </button>
+                    </form>
+
+                </div>
+
+                <a href="{% url 'meal_detail' meal.slug %}" class="stretched-link"></a>
+
+            </div>
+
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+<!-- RESPONSIVE STYLES -->
+<style>
+    /* Image handling */
+    .meal-img-wrapper {
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .meal-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.3s ease;
+    }
+
+    .meal-card:hover .meal-img {
+        transform: scale(1.05);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+        .meal-img-wrapper {
+            height: 180px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .meal-img-wrapper {
+            height: 160px;
+        }
+
+        h3 {
+            text-align: center;
+        }
+    }
+</style>
+
+{% endblock %}
